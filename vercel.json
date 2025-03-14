@@ -4,5 +4,8 @@
       { "source": "/verifyOtp", "destination": "/verifyOtp" },
       { "source": "/login", "destination": "/login" },
       { "source": "/", "destination": "/" }
+    ],
+    "routes": [
+      { "src": "/(.*)", "dest": "/" }
     ]
   }
