@@ -1,11 +1,8 @@
 {
-    "rewrites": [
-      { "source": "/signup", "destination": "/signup" },
-      { "source": "/verifyOtp", "destination": "/verifyOtp" },
-      { "source": "/login", "destination": "/login" },
-      { "source": "/", "destination": "/" }
-    ],
-    "routes": [
-      { "src": "/(.*)", "dest": "/" }
-    ]
-  }
+  "rewrites": [
+    { "source": "/signup", "destination": "/signup" },
+    { "source": "/verifyOtp", "destination": "/verifyOtp" },
+    { "source": "/login", "destination": "/login" },
+    { "source": "/", "destination": "/" }
+  ]
+}
