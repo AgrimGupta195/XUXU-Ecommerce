@@ -1,11 +1,13 @@
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 import HomePage from "./pages/HomePage"
 import SignUpPage from "./pages/SignUpPage"
 import LoginPage from "./pages/LoginPage"
 import Navbar from "./components/Navbar"
 import VerifyOTPPage from "./pages/verifyOtpPage"
-
+import { useUserStore } from "./stores/useUserStore"
+import { Toaster } from "react-hot-toast";
 function App() {
+  const{sign,verified}=useUserStore();
   return (
     <div className='min-h-screen bg-gray-900 text-white relative overflow-hidden'>
 			<div className='absolute inset-0 overflow-hidden'>
@@ -17,11 +19,12 @@ function App() {
       <Navbar/>
       <Routes>
         <Route path="/" element={<HomePage/>} />
-        <Route path="/signup" element={<SignUpPage/>} />
-        <Route path="/verifyOtp" element={<VerifyOTPPage/>} />
+        <Route path="/signup" element={!sign?<SignUpPage/> :<Navigate to='/verifyOtp' />} />
+        <Route path="/verifyOtp" element={!verified?<VerifyOTPPage/> :<Navigate to='/login' />} />
         <Route path="/login" element={<LoginPage/>} />
       </Routes>
       </div>
+      <Toaster />
     </div>
   )
 }

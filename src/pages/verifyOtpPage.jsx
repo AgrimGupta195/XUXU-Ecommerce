@@ -5,11 +5,13 @@ import { motion } from "framer-motion";
 import { useUserStore } from "../stores/useUserStore";
 
 const VerifyOTPPage = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(30);
   const [canResend, setCanResend] = useState(false);
-  const { verifyOtp, resendOtp, loading } = useUserStore();
-
+  const { verifyOtp, resendOtp, loading,setSign,sign,resendLoading } = useUserStore();
+  useEffect(() => {
+      setSign(false);
+  },[setSign])
   // Handle OTP input
   const handleChange = (element, index) => {
     if (isNaN(element.value)) return false;
@@ -19,8 +21,8 @@ const VerifyOTPPage = () => {
     setOtp(newOtp);
 
     // Focus next input
-    if (element.value && index < 5) {
-      const nextInput = document.getElementById(`otp-${index + 1}`);
+    if (element.value && index < 3) { // Changed to 3 (for 4 digits)
+      const nextInput = document.getElementById(`otp-${index + 1}`); // Fixed template literal
       if (nextInput) {
         nextInput.focus();
       }
@@ -30,7 +32,7 @@ const VerifyOTPPage = () => {
   // Handle backspace
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-${index - 1}`);
+      const prevInput = document.getElementById(`otp-${index - 1}`); // Fixed template literal
       if (prevInput) {
         prevInput.focus();
       }
@@ -43,11 +45,11 @@ const VerifyOTPPage = () => {
     const pastedData = e.clipboardData.getData("text").trim();
     if (!/^\d+$/.test(pastedData)) return;
 
-    const otpArray = pastedData.slice(0, 6).split("");
+    const otpArray = pastedData.slice(0, 4).split(""); // Changed to 4 digits
     const newOtp = [...otp];
     
     otpArray.forEach((digit, index) => {
-      if (index < 6) {
+      if (index < 4) { // Changed to 4 digits
         newOtp[index] = digit;
       }
     });
@@ -55,8 +57,8 @@ const VerifyOTPPage = () => {
     setOtp(newOtp);
     
     // Focus the last filled input or the next empty one
-    const lastIndex = Math.min(otpArray.length, 5);
-    const nextInput = document.getElementById(`otp-${lastIndex}`);
+    const lastIndex = Math.min(otpArray.length, 3); // Changed to 3 (for 4 digits)
+    const nextInput = document.getElementById(`otp-${lastIndex}`); // Fixed template literal
     if (nextInput) {
       nextInput.focus();
     }
@@ -66,7 +68,7 @@ const VerifyOTPPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const otpCode = otp.join("");
-    verifyOtp(otpCode);
+    verifyOtp({ otp: otpCode });;
   };
 
   // Handle resend
@@ -123,7 +125,7 @@ const VerifyOTPPage = () => {
                 {otp.map((digit, index) => (
                   <input
                     key={index}
-                    id={`otp-${index}`}
+                    id={`otp-${index}`} // Fixed template literal
                     type="text"
                     maxLength="1"
                     value={digit}
@@ -166,12 +168,12 @@ const VerifyOTPPage = () => {
               Didn't receive the code?{" "}
               <button
                 onClick={handleResend}
-                disabled={!canResend}
+                disabled={!canResend||resendLoading}
                 className={`font-medium ${
                   canResend
                     ? "text-emerald-400 hover:text-emerald-300 cursor-pointer"
                     : "text-gray-500 cursor-not-allowed"
-                }`}
+                }`} 
               >
                 Resend OTP
                 {!canResend && ` (${timeLeft}s)`}
