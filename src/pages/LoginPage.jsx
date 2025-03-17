@@ -9,11 +9,14 @@ const LoginPage = () => {
 	const [password, setPassword] = useState("");
 
 	const { login, loading} = useUserStore();
-    const { verified, setVerified } = useUserStore();
+    const { verified, setVerified ,emailName,setemailName} = useUserStore();
 
   useEffect(() => {
     setVerified(false);
   }, [setVerified]); 
+  useEffect(() => {
+	setemailName(null);
+  },[setemailName]);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
