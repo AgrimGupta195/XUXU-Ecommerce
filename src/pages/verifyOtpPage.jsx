@@ -12,66 +12,54 @@ const VerifyOTPPage = () => {
   useEffect(() => {
       setSign(false);
   },[setSign])
-  // Handle OTP input
   const handleChange = (element, index) => {
     if (isNaN(element.value)) return false;
 
     const newOtp = [...otp];
     newOtp[index] = element.value;
     setOtp(newOtp);
-
-    // Focus next input
-    if (element.value && index < 3) { // Changed to 3 (for 4 digits)
-      const nextInput = document.getElementById(`otp-${index + 1}`); // Fixed template literal
+    if (element.value && index < 3) {
+      const nextInput = document.getElementById(`otp-${index + 1}`); 
       if (nextInput) {
         nextInput.focus();
       }
     }
   };
-
-  // Handle backspace
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-${index - 1}`); // Fixed template literal
+      const prevInput = document.getElementById(`otp-${index - 1}`);
       if (prevInput) {
         prevInput.focus();
       }
     }
   };
-
-  // Handle paste
   const handlePaste = (e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData("text").trim();
     if (!/^\d+$/.test(pastedData)) return;
 
-    const otpArray = pastedData.slice(0, 4).split(""); // Changed to 4 digits
+    const otpArray = pastedData.slice(0, 4).split("");
     const newOtp = [...otp];
     
     otpArray.forEach((digit, index) => {
-      if (index < 4) { // Changed to 4 digits
+      if (index < 4) {
         newOtp[index] = digit;
       }
     });
     
     setOtp(newOtp);
-    
-    // Focus the last filled input or the next empty one
-    const lastIndex = Math.min(otpArray.length, 3); // Changed to 3 (for 4 digits)
-    const nextInput = document.getElementById(`otp-${lastIndex}`); // Fixed template literal
+    const lastIndex = Math.min(otpArray.length, 3);
+    const nextInput = document.getElementById(`otp-${lastIndex}`);
     if (nextInput) {
       nextInput.focus();
     }
   };
-
-  // Handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
     const otpCode = otp.join("");
     verifyOtp({ otp: otpCode });;
   };
 
-  // Handle resend
   const handleResend = () => {
     if (!canResend) return;
     resendOtp();
@@ -125,7 +113,7 @@ const VerifyOTPPage = () => {
                 {otp.map((digit, index) => (
                   <input
                     key={index}
-                    id={`otp-${index}`} // Fixed template literal
+                    id={`otp-${index}`}
                     type="text"
                     maxLength="1"
                     value={digit}
